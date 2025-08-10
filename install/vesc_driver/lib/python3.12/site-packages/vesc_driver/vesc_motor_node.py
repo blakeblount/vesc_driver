@@ -24,8 +24,8 @@ class VESCCANProtocol:
     STATUS_1 = 0x900  # RPM, Current, Duty Cycle
     STATUS_2 = 0xA00  # Amp Hours, Amp Hours Charged
     STATUS_3 = 0xB00  # Watt Hours, Watt Hours Charged
-    STATUS_4 = 0xC00  # Temp FETC, Temp Motor, Current In, PID Pos
-    STATUS_5 = 0xD00  # Tacho, Voltage In
+    STATUS_4 = 0xE00  # Temp FETC, Temp Motor, Current In, PID Pos
+    STATUS_5 = 0xF00  # Tacho, Voltage In
     
     @staticmethod
     def pack_rpm_command(rpm: float) -> bytes:
@@ -223,16 +223,19 @@ class VESCMotorNode(Node):
     
     def process_can_message(self, can_id: int, data: bytes):
         """Process received CAN message"""
-        # VESC CAN IDs are typically in the format 0xXX00 where XX is the message type
-        # Motor ID 0 uses base addresses, other motors add their ID
+        # Remove extended frame bit if present (0x80000000)
+        can_id = can_id & 0x1FFFFFFF
+        
+        # VESC CAN IDs are in format 0xXY00 where X is message type, Y is motor ID
+        # For motor 0, the format is just 0xX00
         motor_id = can_id & 0xFF
-        msg_type = can_id & 0xFFFFFF00
+        msg_type = can_id & 0xFF00
         
         # Debug logging for first few messages
         if not hasattr(self, '_debug_count'):
             self._debug_count = 0
         if self._debug_count < 5:
-            self.get_logger().info(f'CAN ID: 0x{can_id:08X}, Motor ID: {motor_id}, Msg Type: 0x{msg_type:04X}, Data len: {len(data)}')
+            self.get_logger().info(f'CAN ID: 0x{can_id:04X}, Motor ID: {motor_id}, Msg Type: 0x{msg_type:04X}, Data len: {len(data)}')
             self._debug_count += 1
         
         # Check if this message is for our motor
