@@ -16,10 +16,11 @@ from typing import Optional
 class VESCCANProtocol:
     """VESC CAN protocol constants and message handling"""
     
-    # CAN message IDs (base + motor_id)
-    CMD_SET_RPM = 0x300
-    CMD_SET_CURRENT = 0x400
-    CMD_SET_DUTY_CYCLE = 0x500
+    # CAN message IDs (command_id << 8 | motor_id)
+    CMD_SET_DUTY = 0  # Duty cycle command
+    CMD_SET_CURRENT = 1  # Current command
+    CMD_SET_RPM = 3  # RPM command
+    CMD_SET_POS = 4  # Position command
     
     STATUS_1 = 0x900  # RPM, Current, Duty Cycle
     STATUS_2 = 0xA00  # Amp Hours, Amp Hours Charged
@@ -183,7 +184,8 @@ class VESCMotorNode(Node):
             return
         
         try:
-            can_id = VESCCANProtocol.CMD_SET_RPM + self.motor_id
+            # VESC CAN ID format: (command_id << 8) | motor_id
+            can_id = (VESCCANProtocol.CMD_SET_RPM << 8) | self.motor_id
             # Use extended CAN ID format
             can_id |= 0x80000000
             data = VESCCANProtocol.pack_rpm_command(rpm, self.pole_pairs)
@@ -201,7 +203,8 @@ class VESCMotorNode(Node):
             return
         
         try:
-            can_id = VESCCANProtocol.CMD_SET_DUTY_CYCLE + self.motor_id
+            # VESC CAN ID format: (command_id << 8) | motor_id
+            can_id = (VESCCANProtocol.CMD_SET_DUTY << 8) | self.motor_id
             # Use extended CAN ID format
             can_id |= 0x80000000
             data = VESCCANProtocol.pack_duty_command(duty)
