@@ -202,12 +202,16 @@ class VESCMotorNode(Node):
         while rclpy.ok() and self.can_socket:
             try:
                 frame = self.can_socket.recv(16)
-                if len(frame) >= 4:
-                    # SocketCAN frame format: 4 bytes CAN ID + 1 byte DLC + 3 bytes padding + up to 8 bytes data
-                    can_id = struct.unpack('<I', frame[:4])[0]
-                    if len(frame) >= 8:
-                        dlc = frame[4]  # Data Length Code
-                        data = frame[8:8+dlc] if dlc <= 8 else frame[8:16]
+                if len(frame) >= 8:
+                    # SocketCAN frame: CAN ID (4 bytes) + DLC (1 byte) + padding (3 bytes) + data (up to 8 bytes)
+                    can_id = struct.unpack('=I', frame[:4])[0]  # Use native byte order
+                    dlc = frame[4] if len(frame) > 4 else 0
+                    
+                    # Extract data based on DLC
+                    if dlc > 0 and len(frame) >= 8:
+                        data_start = 8
+                        data_end = min(data_start + dlc, len(frame))
+                        data = frame[data_start:data_end]
                         self.process_can_message(can_id, data)
             except socket.timeout:
                 continue
