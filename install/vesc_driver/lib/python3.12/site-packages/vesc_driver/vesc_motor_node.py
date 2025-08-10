@@ -43,7 +43,8 @@ class VESCCANProtocol:
     def unpack_status_1(data: bytes) -> dict:
         """Unpack STATUS_1 message: RPM, Current, Duty Cycle"""
         if len(data) >= 8:
-            rpm, current, duty = struct.unpack('>ihhxx', data[:8])
+            # RPM (4 bytes), Current (2 bytes), Duty (2 bytes) = 8 bytes total
+            rpm, current, duty = struct.unpack('>ihh', data[:8])
             return {
                 'rpm': float(rpm),
                 'current': float(current) / 10.0,
@@ -54,7 +55,8 @@ class VESCCANProtocol:
     @staticmethod
     def unpack_status_5(data: bytes) -> dict:
         """Unpack STATUS_5 message: Tacho, Voltage"""
-        if len(data) >= 8:
+        if len(data) >= 6:
+            # Tacho (4 bytes), Voltage (2 bytes) = 6 bytes
             tacho, voltage = struct.unpack('>ih', data[:6])
             return {
                 'tacho': int(tacho),
@@ -221,11 +223,21 @@ class VESCMotorNode(Node):
     
     def process_can_message(self, can_id: int, data: bytes):
         """Process received CAN message"""
+        # VESC CAN IDs are typically in the format 0xXX00 where XX is the message type
+        # Motor ID 0 uses base addresses, other motors add their ID
         motor_id = can_id & 0xFF
+        msg_type = can_id & 0xFFFFFF00
+        
+        # Debug logging for first few messages
+        if not hasattr(self, '_debug_count'):
+            self._debug_count = 0
+        if self._debug_count < 5:
+            self.get_logger().info(f'CAN ID: 0x{can_id:08X}, Motor ID: {motor_id}, Msg Type: 0x{msg_type:04X}, Data len: {len(data)}')
+            self._debug_count += 1
+        
+        # Check if this message is for our motor
         if motor_id != self.motor_id:
             return
-        
-        msg_type = can_id & 0xFF00
         
         if msg_type == VESCCANProtocol.STATUS_1:
             status = VESCCANProtocol.unpack_status_1(data)
