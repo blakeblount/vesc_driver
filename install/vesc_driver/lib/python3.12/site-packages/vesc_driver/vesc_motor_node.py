@@ -177,6 +177,7 @@ class VESCMotorNode(Node):
         try:
             can_id = VESCCANProtocol.CMD_SET_RPM + self.motor_id
             data = VESCCANProtocol.pack_rpm_command(rpm)
+            # SocketCAN frame: 4 bytes CAN ID + 1 byte DLC + 3 bytes padding + 8 bytes data
             frame = struct.pack('<IB3x', can_id, len(data)) + data.ljust(8, b'\x00')
             self.can_socket.send(frame)
         except Exception as e:
@@ -190,6 +191,7 @@ class VESCMotorNode(Node):
         try:
             can_id = VESCCANProtocol.CMD_SET_DUTY_CYCLE + self.motor_id
             data = VESCCANProtocol.pack_duty_command(duty)
+            # SocketCAN frame: 4 bytes CAN ID + 1 byte DLC + 3 bytes padding + 8 bytes data
             frame = struct.pack('<IB3x', can_id, len(data)) + data.ljust(8, b'\x00')
             self.can_socket.send(frame)
         except Exception as e:
@@ -200,10 +202,13 @@ class VESCMotorNode(Node):
         while rclpy.ok() and self.can_socket:
             try:
                 frame = self.can_socket.recv(16)
-                if len(frame) >= 8:
-                    can_id, length = struct.unpack('<IB3x', frame[:8])
-                    data = frame[8:8+length]
-                    self.process_can_message(can_id, data)
+                if len(frame) >= 4:
+                    # SocketCAN frame format: 4 bytes CAN ID + 1 byte DLC + 3 bytes padding + up to 8 bytes data
+                    can_id = struct.unpack('<I', frame[:4])[0]
+                    if len(frame) >= 8:
+                        dlc = frame[4]  # Data Length Code
+                        data = frame[8:8+dlc] if dlc <= 8 else frame[8:16]
+                        self.process_can_message(can_id, data)
             except socket.timeout:
                 continue
             except Exception as e:
