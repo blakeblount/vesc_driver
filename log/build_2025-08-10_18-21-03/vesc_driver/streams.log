@@ -1,0 +1,26 @@
+[1.210s] Invoking command in '/home/blake/vesc-ros2/src/vesc_driver': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/blake/vesc-ros2/build/vesc_driver/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/blake/vesc-ros2/install/vesc_driver/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/vesc_driver build --build-base /home/blake/vesc-ros2/build/vesc_driver/build install --record /home/blake/vesc-ros2/build/vesc_driver/install.log --single-version-externally-managed install_data
+[1.636s] running egg_info
+[1.666s] writing ../../build/vesc_driver/vesc_driver.egg-info/PKG-INFO
+[1.666s] writing dependency_links to ../../build/vesc_driver/vesc_driver.egg-info/dependency_links.txt
+[1.667s] writing entry points to ../../build/vesc_driver/vesc_driver.egg-info/entry_points.txt
+[1.667s] writing requirements to ../../build/vesc_driver/vesc_driver.egg-info/requires.txt
+[1.667s] writing top-level names to ../../build/vesc_driver/vesc_driver.egg-info/top_level.txt
+[1.731s] reading manifest file '../../build/vesc_driver/vesc_driver.egg-info/SOURCES.txt'
+[1.732s] writing manifest file '../../build/vesc_driver/vesc_driver.egg-info/SOURCES.txt'
+[1.732s] running build
+[1.732s] running build_py
+[1.732s] copying vesc_driver/vesc_motor_node.py -> /home/blake/vesc-ros2/build/vesc_driver/build/lib/vesc_driver
+[1.733s] running install
+[1.741s] running install_lib
+[1.773s] copying /home/blake/vesc-ros2/build/vesc_driver/build/lib/vesc_driver/vesc_motor_node.py -> /home/blake/vesc-ros2/install/vesc_driver/lib/python3.12/site-packages/vesc_driver
+[1.773s] byte-compiling /home/blake/vesc-ros2/install/vesc_driver/lib/python3.12/site-packages/vesc_driver/vesc_motor_node.py to vesc_motor_node.cpython-312.pyc
+[1.778s] running install_data
+[1.778s] running install_egg_info
+[1.813s] removing '/home/blake/vesc-ros2/install/vesc_driver/lib/python3.12/site-packages/vesc_driver-0.0.0-py3.12.egg-info' (and everything under it)
+[1.813s] Copying ../../build/vesc_driver/vesc_driver.egg-info to /home/blake/vesc-ros2/install/vesc_driver/lib/python3.12/site-packages/vesc_driver-0.0.0-py3.12.egg-info
+[1.814s] running install_scripts
+[2.014s] Installing vesc_diff_drive_node script to /home/blake/vesc-ros2/install/vesc_driver/lib/vesc_driver
+[2.014s] Installing vesc_motor_node script to /home/blake/vesc-ros2/install/vesc_driver/lib/vesc_driver
+[2.014s] Installing vesc_skid_steer_node script to /home/blake/vesc-ros2/install/vesc_driver/lib/vesc_driver
+[2.014s] writing list of installed files to '/home/blake/vesc-ros2/build/vesc_driver/install.log'
+[2.062s] Invoked command in '/home/blake/vesc-ros2/src/vesc_driver' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/blake/vesc-ros2/build/vesc_driver/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/blake/vesc-ros2/install/vesc_driver/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/vesc_driver build --build-base /home/blake/vesc-ros2/build/vesc_driver/build install --record /home/blake/vesc-ros2/build/vesc_driver/install.log --single-version-externally-managed install_data

@@ -163,11 +163,13 @@ class VESCMotorNode(Node):
     
     def velocity_command_callback(self, msg: Float64):
         """Handle velocity command (m/s) and convert to RPM"""
+        self.get_logger().info(f'Received velocity command: {msg.data} m/s')
         if self.control_mode == 'rpm':
             # Convert m/s to RPM: v = ω * r, ω = v/r, RPM = ω * 60/(2π)
             angular_velocity = msg.data / self.wheel_radius  # rad/s
             rpm = angular_velocity * 60.0 / (2.0 * 3.14159)
             rpm = max(min(rpm, self.max_rpm), self.min_rpm)
+            self.get_logger().info(f'Converted to RPM: {rpm}')
             self.send_rpm_command(rpm)
             self.last_command_time = time.time()
     
@@ -178,10 +180,13 @@ class VESCMotorNode(Node):
         
         try:
             can_id = VESCCANProtocol.CMD_SET_RPM + self.motor_id
+            # Use extended CAN ID format
+            can_id |= 0x80000000
             data = VESCCANProtocol.pack_rpm_command(rpm)
             # SocketCAN frame: 4 bytes CAN ID + 1 byte DLC + 3 bytes padding + 8 bytes data
             frame = struct.pack('<IB3x', can_id, len(data)) + data.ljust(8, b'\x00')
             self.can_socket.send(frame)
+            self.get_logger().info(f'Sent RPM command: {rpm} RPM to motor {self.motor_id} (CAN ID: 0x{can_id:08X})')
         except Exception as e:
             self.get_logger().warn(f'Failed to send RPM command: {e}')
     
@@ -248,12 +253,18 @@ class VESCMotorNode(Node):
                 self.current_rpm = status['rpm']
                 self.current_current = status['current']
                 self.duty_cycle = status['duty_cycle']
+                if not hasattr(self, '_status_logged'):
+                    self.get_logger().info(f'STATUS_1: RPM={self.current_rpm}, Current={self.current_current}A, Duty={self.duty_cycle}')
+                    self._status_logged = True
         
         elif msg_type == VESCCANProtocol.STATUS_5:
             status = VESCCANProtocol.unpack_status_5(data)
             if status:
                 self.tacho_count = status['tacho']
                 self.current_voltage = status['voltage']
+                if not hasattr(self, '_voltage_logged'):
+                    self.get_logger().info(f'STATUS_5: Voltage={self.current_voltage}V, Tacho={self.tacho_count}')
+                    self._voltage_logged = True
     
     def publish_status(self):
         """Publish motor status as JointState"""
