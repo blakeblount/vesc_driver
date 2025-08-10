@@ -28,10 +28,12 @@ class VESCCANProtocol:
     STATUS_5 = 0xF00  # Tacho, Voltage In
     
     @staticmethod
-    def pack_rpm_command(rpm: float) -> bytes:
-        """Pack RPM command for CAN transmission"""
-        rpm_int = int(rpm)
-        return struct.pack('>i', rpm_int)[:4]
+    def pack_rpm_command(rpm: float, pole_pairs: int = 23) -> bytes:
+        """Pack RPM command for CAN transmission
+        VESC expects eRPM (electrical RPM) = mechanical RPM * pole pairs
+        """
+        erpm = int(rpm * pole_pairs)
+        return struct.pack('>i', erpm)[:4]
     
     @staticmethod
     def pack_duty_command(duty: float) -> bytes:
@@ -78,6 +80,7 @@ class VESCMotorNode(Node):
         self.declare_parameter('max_rpm', 3000.0)
         self.declare_parameter('min_rpm', -3000.0)
         self.declare_parameter('wheel_radius', 0.1)  # meters
+        self.declare_parameter('pole_pairs', 23)  # 46 poles / 2 = 23 pole pairs
         self.declare_parameter('publish_rate', 20.0)  # Hz
         self.declare_parameter('command_timeout', 1.0)  # seconds
         
@@ -88,6 +91,7 @@ class VESCMotorNode(Node):
         self.max_rpm = self.get_parameter('max_rpm').value
         self.min_rpm = self.get_parameter('min_rpm').value
         self.wheel_radius = self.get_parameter('wheel_radius').value
+        self.pole_pairs = self.get_parameter('pole_pairs').value
         self.publish_rate = self.get_parameter('publish_rate').value
         self.command_timeout = self.get_parameter('command_timeout').value
         
@@ -182,11 +186,12 @@ class VESCMotorNode(Node):
             can_id = VESCCANProtocol.CMD_SET_RPM + self.motor_id
             # Use extended CAN ID format
             can_id |= 0x80000000
-            data = VESCCANProtocol.pack_rpm_command(rpm)
+            data = VESCCANProtocol.pack_rpm_command(rpm, self.pole_pairs)
             # SocketCAN frame: 4 bytes CAN ID + 1 byte DLC + 3 bytes padding + 8 bytes data
             frame = struct.pack('<IB3x', can_id, len(data)) + data.ljust(8, b'\x00')
             self.can_socket.send(frame)
-            self.get_logger().info(f'Sent RPM command: {rpm} RPM to motor {self.motor_id} (CAN ID: 0x{can_id:08X})')
+            erpm = rpm * self.pole_pairs
+            self.get_logger().info(f'Sent RPM command: {rpm} RPM ({erpm} eRPM) to motor {self.motor_id} (CAN ID: 0x{can_id:08X})')
         except Exception as e:
             self.get_logger().warn(f'Failed to send RPM command: {e}')
     
@@ -197,10 +202,13 @@ class VESCMotorNode(Node):
         
         try:
             can_id = VESCCANProtocol.CMD_SET_DUTY_CYCLE + self.motor_id
+            # Use extended CAN ID format
+            can_id |= 0x80000000
             data = VESCCANProtocol.pack_duty_command(duty)
             # SocketCAN frame: 4 bytes CAN ID + 1 byte DLC + 3 bytes padding + 8 bytes data
             frame = struct.pack('<IB3x', can_id, len(data)) + data.ljust(8, b'\x00')
             self.can_socket.send(frame)
+            self.get_logger().info(f'Sent duty cycle command: {duty} to motor {self.motor_id} (CAN ID: 0x{can_id:08X})')
         except Exception as e:
             self.get_logger().warn(f'Failed to send duty command: {e}')
     
