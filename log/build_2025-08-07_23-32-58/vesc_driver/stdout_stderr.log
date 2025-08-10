@@ -1,0 +1,27 @@
+running egg_info
+writing ../../build/vesc_driver/vesc_driver.egg-info/PKG-INFO
+writing dependency_links to ../../build/vesc_driver/vesc_driver.egg-info/dependency_links.txt
+writing entry points to ../../build/vesc_driver/vesc_driver.egg-info/entry_points.txt
+writing requirements to ../../build/vesc_driver/vesc_driver.egg-info/requires.txt
+writing top-level names to ../../build/vesc_driver/vesc_driver.egg-info/top_level.txt
+reading manifest file '../../build/vesc_driver/vesc_driver.egg-info/SOURCES.txt'
+writing manifest file '../../build/vesc_driver/vesc_driver.egg-info/SOURCES.txt'
+running build
+running build_py
+running install
+running install_lib
+running install_data
+copying launch/diff_drive_rover.launch.py -> /home/blake/vesc-ros2/install/vesc_driver/share/vesc_driver/launch
+copying launch/four_motor_rover.launch.py -> /home/blake/vesc-ros2/install/vesc_driver/share/vesc_driver/launch
+copying launch/nav2_skid_steer.launch.py -> /home/blake/vesc-ros2/install/vesc_driver/share/vesc_driver/launch
+creating /home/blake/vesc-ros2/install/vesc_driver/share/vesc_driver/config
+copying config/motor_params.yaml -> /home/blake/vesc-ros2/install/vesc_driver/share/vesc_driver/config
+copying config/four_motor_config.yaml -> /home/blake/vesc-ros2/install/vesc_driver/share/vesc_driver/config
+copying config/nav2_skid_steer.yaml -> /home/blake/vesc-ros2/install/vesc_driver/share/vesc_driver/config
+running install_egg_info
+Copying ../../build/vesc_driver/vesc_driver.egg-info to /home/blake/vesc-ros2/install/vesc_driver/lib/python3.12/site-packages/vesc_driver-0.0.0-py3.12.egg-info
+running install_scripts
+Installing vesc_diff_drive_node script to /home/blake/vesc-ros2/install/vesc_driver/lib/vesc_driver
+Installing vesc_motor_node script to /home/blake/vesc-ros2/install/vesc_driver/lib/vesc_driver
+Installing vesc_skid_steer_node script to /home/blake/vesc-ros2/install/vesc_driver/lib/vesc_driver
+writing list of installed files to '/home/blake/vesc-ros2/build/vesc_driver/install.log'

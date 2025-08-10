@@ -1,0 +1,80 @@
+# Configuration for 4-wheel skid-steer operation with Nav2
+
+# CAN Bus Settings
+can_interface: "can0"
+
+# Motor Physical Properties
+wheel_radius: 0.1          # Wheel radius in meters
+wheel_base: 0.5           # Distance between front and rear axles (m)
+wheel_track: 0.4          # Distance between left and right wheels (m)
+
+# Motor Control Settings
+control_mode: "rpm"        # Control mode: "rpm" or "duty_cycle"
+max_rpm: 3000.0           # Maximum RPM
+min_rpm: -3000.0          # Minimum RPM (for bidirectional)
+
+# Speed Limits (tuned for Nav2 compatibility)
+max_linear_speed: 1.5     # Maximum linear speed in m/s (conservative for Nav2)
+max_angular_speed: 1.5    # Maximum angular speed in rad/s
+
+# Publishing Rates
+publish_rate: 20.0        # Motor status publishing rate in Hz
+odom_rate: 50.0          # Odometry publishing rate in Hz (good for Nav2)
+
+# Safety Settings
+command_timeout: 1.0      # Command timeout in seconds
+
+# Frame IDs (standard Nav2 frames)
+odom_frame: "odom"
+base_frame: "base_link"
+
+# Publishing Options
+publish_odom: true        # Publish odometry messages (required for Nav2)
+publish_tf: true          # Publish TF transforms (required for Nav2)
+
+# Motor IDs for 4-wheel skid-steer
+front_left_motor_id: 0
+front_right_motor_id: 1
+rear_left_motor_id: 2
+rear_right_motor_id: 3
+
+# Individual Motor Configurations
+motor_0:
+  motor_id: 0
+  can_interface: "can0"
+  control_mode: "rpm"
+  max_rpm: 3000.0
+  min_rpm: -3000.0
+  wheel_radius: 0.1
+  publish_rate: 20.0
+  command_timeout: 1.0
+
+motor_1:
+  motor_id: 1
+  can_interface: "can0"
+  control_mode: "rpm"
+  max_rpm: 3000.0
+  min_rpm: -3000.0
+  wheel_radius: 0.1
+  publish_rate: 20.0
+  command_timeout: 1.0
+
+motor_2:
+  motor_id: 2
+  can_interface: "can0"
+  control_mode: "rpm"
+  max_rpm: 3000.0
+  min_rpm: -3000.0
+  wheel_radius: 0.1
+  publish_rate: 20.0
+  command_timeout: 1.0
+
+motor_3:
+  motor_id: 3
+  can_interface: "can0"
+  control_mode: "rpm"
+  max_rpm: 3000.0
+  min_rpm: -3000.0
+  wheel_radius: 0.1
+  publish_rate: 20.0
+  command_timeout: 1.0

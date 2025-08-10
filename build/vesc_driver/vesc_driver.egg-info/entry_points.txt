@@ -1,0 +1,4 @@
+[console_scripts]
+vesc_diff_drive_node = vesc_driver.vesc_diff_drive_node:main
+vesc_motor_node = vesc_driver.vesc_motor_node:main
+vesc_skid_steer_node = vesc_driver.vesc_skid_steer_node:main

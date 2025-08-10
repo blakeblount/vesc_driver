@@ -1,0 +1,7 @@
+Metadata-Version: 2.1
+Name: vesc-driver
+Version: 0.0.0
+Summary: ROS2 driver for VESC-compatible motor controllers with differential drive support
+Maintainer: blake
+Maintainer-email: blake@todo.todo
+License: MIT

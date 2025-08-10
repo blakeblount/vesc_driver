@@ -1,0 +1,42 @@
+# Four Motor Configuration for Rover
+
+# Individual Motor Configurations
+motor_0:
+  motor_id: 0
+  can_interface: "can0"
+  control_mode: "rpm"
+  max_rpm: 3000.0
+  min_rpm: -3000.0
+  wheel_radius: 0.1
+  publish_rate: 20.0
+  command_timeout: 1.0
+
+motor_1:
+  motor_id: 1
+  can_interface: "can0"
+  control_mode: "rpm"
+  max_rpm: 3000.0
+  min_rpm: -3000.0
+  wheel_radius: 0.1
+  publish_rate: 20.0
+  command_timeout: 1.0
+
+motor_2:
+  motor_id: 2
+  can_interface: "can0"
+  control_mode: "rpm"
+  max_rpm: 3000.0
+  min_rpm: -3000.0
+  wheel_radius: 0.1
+  publish_rate: 20.0
+  command_timeout: 1.0
+
+motor_3:
+  motor_id: 3
+  can_interface: "can0"
+  control_mode: "rpm"
+  max_rpm: 3000.0
+  min_rpm: -3000.0
+  wheel_radius: 0.1
+  publish_rate: 20.0
+  command_timeout: 1.0

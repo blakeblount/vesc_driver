@@ -1,0 +1,44 @@
+# VESC Motor Configuration Parameters
+
+# CAN Bus Settings
+can_interface: "can0"
+
+# Motor Physical Properties
+wheel_radius: 0.1          # Wheel radius in meters
+wheel_base: 0.5           # Distance between wheels in meters
+
+# Motor Control Settings
+control_mode: "rpm"        # Control mode: "rpm" or "duty_cycle"
+max_rpm: 3000.0           # Maximum RPM
+min_rpm: -3000.0          # Minimum RPM (for bidirectional)
+
+# Speed Limits
+max_linear_speed: 2.0     # Maximum linear speed in m/s
+max_angular_speed: 2.0    # Maximum angular speed in rad/s
+
+# Publishing Rates
+publish_rate: 20.0        # Motor status publishing rate in Hz
+odom_rate: 50.0          # Odometry publishing rate in Hz
+
+# Safety Settings
+command_timeout: 1.0      # Command timeout in seconds (motor stops if no commands)
+
+# Frame IDs
+odom_frame: "odom"
+base_frame: "base_link"
+
+# Publishing Options
+publish_odom: true        # Publish odometry messages
+publish_tf: true          # Publish TF transforms
+
+# Motor IDs (for 4-wheel rover)
+motor_ids:
+  front_left: 0
+  front_right: 1
+  rear_left: 2
+  rear_right: 3
+
+# Differential Drive Configuration (for 2-wheel mode)
+diff_drive:
+  left_motor_id: 0
+  right_motor_id: 1
